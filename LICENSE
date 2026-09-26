@@ -1,4 +1,82 @@
-                                 Apache License
+// প্রোডাক্ট লিস্ট (আপনি আপনার ইচ্ছামতো প্রডাক্ট ও দাম পরিবর্তন বা যোগ করতে পারেন)
+const products = [
+    { id: 1, name: "স্মার্টওয়াচ", price: 1499, image: "https://via.placeholder.com/150" },
+    { id: 2, name: "ওয়্যারলেস হেডফোন", price: 999, image: "https://via.placeholder.com/150" },
+    { id: 3, name: "রানিং শু", price: 1299, image: "https://via.placeholder.com/150" },
+    { id: 4, name: "ব্যাকপ্যাক Bag", price: 799, image: "https://via.placeholder.com/150" }
+];
+
+let cart = [];
+
+// প্রোডাক্ট পেজে দেখানোর ফানকশন
+function loadProducts() {
+    const container = document.getElementById('product-list');
+    container.innerHTML = products.map(p => `
+        <div class="product-card">
+            <img src="${p.image}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <div class="price">₹${p.price}</div>
+            <button class="add-btn" onclick="addToCart(${p.id})">কার্টে যোগ করুন</button>
+        </div>
+    `).join('');
+}
+
+// কার্টে প্রোডাক্ট যোগ করা
+function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    cart.push(product);
+    updateCartUI();
+    alert(`${product.name} কার্টে যোগ করা হয়েছে!`);
+}
+
+// কার্ট আপডেট করা
+function updateCartUI() {
+    document.getElementById('cart-count').innerText = cart.length;
+    
+    const cartItems = document.getElementById('cart-items');
+    cartItems.innerHTML = cart.map((item, index) => `
+        <div style="display:flex; justify-content:space-between; margin:8px 0;">
+            <span>${item.name}</span>
+            <span>₹${item.price}</span>
+        </div>
+    `).join('');
+
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    document.getElementById('cart-total').innerText = total;
+}
+
+// কার্ট ওপেন/ক্লোজ করা
+function toggleCart() {
+    const modal = document.getElementById('cart-modal');
+    modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+}
+
+// ক্যাশ অন ডেলিভারি অর্ডার প্লেস করা
+function placeOrder(event) {
+    event.preventDefault();
+    
+    if (cart.length === 0) {
+        alert("আপনার কার্ট খালি!");
+        return;
+    }
+
+    const name = document.getElementById('cust-name').value;
+    const phone = document.getElementById('cust-phone').value;
+    const address = document.getElementById('cust-address').value;
+    const total = document.getElementById('cart-total').innerText;
+
+    alert(`ধন্যবাদ ${name}! আপনার ₹${total} টাকার অর্ডারটি সফল হয়েছে (Cash on Delivery)।\nখুব শীঘ্রই ${phone} নম্বরে যোগাযোগ করা হবে।`);
+    
+    // কার্ট খালি করা
+    cart = [];
+    updateCartUI();
+    toggleCart();
+    document.getElementById('order-form').reset();
+}
+
+// পেজ লোড হলে প্রোডাক্টগুলো দেখাবে
+loadProducts();
+Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
 
